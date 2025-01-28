@@ -507,6 +507,11 @@ class Arbiter(object):
             tmpwatchers = {k.name: set(v) for k, v in watchers.iteritems()}
             order = []
 
+            for deps in tmpwatchers.itervalues():
+                for dep in deps:
+                    if dep not in tmpwatchers.keys():
+                        raise ValueError("Dependency '%s' specified, yet there is no such watcher. Ignoring dependency." % dep)
+
             while tmpwatchers:
                 ready = {name for name, deps
                          in tmpwatchers.iteritems() if not deps}
